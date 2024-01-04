@@ -2,7 +2,7 @@
 // ignore: prefer_const_literals_to_create_immutables
 import 'package:blog_vlog/custom_components/custom_textfield.dart';
 import 'package:blog_vlog/custom_components/oauth_box.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:blog_vlog/services/account_services.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -82,9 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     onPressed: () {
                       // login button action
-                      loginToAccount();
-                      debugPrint("logged in successfully");
-                      Navigator.pushNamed(context, "/dashboard_screen");
+                      signInManual();
                     },
                     child: const Text(
                       "Login",
@@ -108,6 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Wrap(
                 children: [
                   OuathBox(
+                    onclick: () {
+                      loginWithGoogle();
+                    },
                     child: Image.network(
                         'http://pngimg.com/uploads/google/google_PNG19635.png',
                         fit: BoxFit.cover),
@@ -116,6 +117,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 20,
                   ),
                   OuathBox(
+                    onclick: () {
+                      print("login with facebook");
+                    },
                     child: Icon(
                       Icons.facebook,
                       size: 40,
@@ -149,16 +153,21 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> loginToAccount() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
-    }
+  // Method to sign in with google account
+  Future<void> loginWithGoogle() async {
+    AccountServices().signInWithGoogle().then((value) {
+      debugPrint("logged in with google, move to dashboard");
+      Navigator.pushNamed(context, "/dashboard_screen");
+    });
+  }
+
+  // Method to sign in to the app manually with email and password.
+  Future<void> signInManual() async {
+    AccountServices()
+        .loginToAccount(emailController.text, passwordController.text)
+        .then((value) {
+      debugPrint("logged in, move to dashboard");
+      Navigator.pushNamed(context, "/dashboard_screen");
+    });
   }
 }
