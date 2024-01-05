@@ -17,6 +17,7 @@ class CustomTextField extends StatefulWidget {
     required this.obscure,
     required this.controller,
   });
+  
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -28,7 +29,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: TextField(
-        autocorrect: false,
+       // autocorrect: false,
         textCapitalization:TextCapitalization.none,
         controller: widget.controller,
         obscureText: widget.obscure,

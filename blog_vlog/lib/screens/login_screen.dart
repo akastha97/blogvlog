@@ -28,83 +28,85 @@ class _LoginScreenState extends State<LoginScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xff84A98C),
-        body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 40,
-              ),
-              Image.asset("lib/assets/logo-2.png"),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Login",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              CustomTextField(
-                suffix: Text(""),
-                obscure: false,
-                hint: "Email",
-                label: "Email",
-                controller: emailController,
-              ),
-              CustomTextField(
-                suffix: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isVisible = !isVisible;
-                      });
-                    },
-                    child: isVisible
-                        ? Icon(
-                            Icons.visibility,
-                            color: Colors.black,
-                          )
-                        : Icon(
-                            Icons.visibility_off_outlined,
-                            color: Colors.black,
-                          )),
-                obscure: isVisible,
-                hint: "Password",
-                label: "Password",
-                controller: passwordController,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              CustomButton(
-                buttonText: 'Login',
-                onPressed: signInManual,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20),
-                child: Row(children: const [
-                  Expanded(
-                      child: Divider(
-                    thickness: 1,
-                  )),
-                  Text("or"),
-                  Expanded(child: Divider(thickness: 1)),
-                ]),
-              ),
-              displayOauthBoxes(),
-              SizedBox(
-                height: 40,
-              ),
-              CustomRichText(
-                subtext1: "Don't have an account? ",
-                subtext2: "Create an account!",
-                onTap: () => Navigator.pushNamed(context, "/signup_screen"),
-              ),
-            ],
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 40,
+                ),
+                Image.asset("lib/assets/logo-2.png"),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Login",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                CustomTextField(
+                  suffix: Text(""),
+                  obscure: false,
+                  hint: "Email",
+                  label: "Email",
+                  controller: emailController,
+                ),
+                CustomTextField(
+                  suffix: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isVisible = !isVisible;
+                        });
+                      },
+                      child: isVisible
+                          ? Icon(
+                              Icons.visibility,
+                              color: Colors.black,
+                            )
+                          : Icon(
+                              Icons.visibility_off_outlined,
+                              color: Colors.black,
+                            )),
+                  obscure: isVisible,
+                  hint: "Password",
+                  label: "Password",
+                  controller: passwordController,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                CustomButton(
+                  buttonText: 'Login',
+                  onPressed: signInManual,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0, right: 20),
+                  child: Row(children: const [
+                    Expanded(
+                        child: Divider(
+                      thickness: 1,
+                    )),
+                    Text("or"),
+                    Expanded(child: Divider(thickness: 1)),
+                  ]),
+                ),
+                displayOauthBoxes(),
+                SizedBox(
+                  height: 40,
+                ),
+                CustomRichText(
+                  subtext1: "Don't have an account? ",
+                  subtext2: "Create an account!",
+                  onTap: () => Navigator.pushNamed(context, "/signup_screen"),
+                ),
+              ],
+            ),
           ),
         ),
       ),

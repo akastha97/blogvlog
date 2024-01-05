@@ -23,73 +23,75 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xff84A98C),
-        body: Center(
-            child: Column(
-          children: [
-            const SizedBox(
-              height: 80,
-            ),
-            Image.asset("lib/assets/logo-2.png"),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              "Create Account",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            CustomTextField(
-              suffix: Text(""),
-              obscure: false,
-              hint: "Email",
-              label: "Email",
-              controller: emailController,
-            ),
-            CustomTextField(
-              suffix: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      showPass = !showPass;
-                    });
-                  },
-                  child: showPass
-                      ? const Icon(
-                          Icons.visibility,
-                          color: Colors.black,
-                        )
-                      : const Icon(
-                          Icons.visibility_off_outlined,
-                          color: Colors.black,
-                        )),
-              obscure: showPass,
-              hint: "Password",
-              label: "Password",
-              controller: passwordController,
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            // login button
-            CustomButton(
-              buttonText: 'Create Account',
-              onPressed: () {
-                createAccount();
-                debugPrint("account created successfully");
-                Navigator.pushNamed(context, "/login_screen");
-              },
-            ),
-
-            const SizedBox(height: 40),
-            CustomRichText(
-              subtext1: 'Already have an account?',
-              subtext2: ' Login here!',
-              onTap: () => Navigator.pushNamed(context, "/login_screen"),
-            ),
-          ],
-        )),
+        //backgroundColor: Color(0xff84A98C),
+        body: SingleChildScrollView(
+          child: Center(
+              child: Column(
+            children: [
+              const SizedBox(
+                height: 80,
+              ),
+              Image.asset("lib/assets/logo-2.png"),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                "Create Account",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CustomTextField(
+                suffix: Text(""),
+                obscure: false,
+                hint: "Email",
+                label: "Email",
+                controller: emailController,
+              ),
+              CustomTextField(
+                suffix: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        showPass = !showPass;
+                      });
+                    },
+                    child: showPass
+                        ? const Icon(
+                            Icons.visibility,
+                            color: Colors.black,
+                          )
+                        : const Icon(
+                            Icons.visibility_off_outlined,
+                            color: Colors.black,
+                          )),
+                obscure: showPass,
+                hint: "Password",
+                label: "Password",
+                controller: passwordController,
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              // login button
+              CustomButton(
+                buttonText: 'Create Account',
+                onPressed: () {
+                  createAccount();
+                  debugPrint("account created successfully");
+                  Navigator.pushNamed(context, "/login_screen");
+                },
+              ),
+        
+              const SizedBox(height: 40),
+              CustomRichText(
+                subtext1: 'Already have an account?',
+                subtext2: ' Login here!',
+                onTap: () => Navigator.pushNamed(context, "/login_screen"),
+              ),
+            ],
+          )),
+        ),
       ),
     );
   }
