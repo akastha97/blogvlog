@@ -1,10 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 // ignore: prefer_const_literals_to_create_immutables
+
+// Class for Login screen
+
+import 'package:blog_vlog/custom_components/custom_richtext.dart';
 import 'package:blog_vlog/custom_components/custom_textfield.dart';
 import 'package:blog_vlog/custom_components/oauth_box.dart';
 import 'package:blog_vlog/services/account_services.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import '../custom_components/custom_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -72,22 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                height: 48,
-                width: 100,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
-                    ),
-                    onPressed: () {
-                      // login button action
-                      signInManual();
-                    },
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(color: Colors.black),
-                    )),
+              CustomButton(
+                buttonText: 'Login',
+                onPressed: signInManual,
               ),
               SizedBox(
                 height: 20,
@@ -103,54 +95,47 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(child: Divider(thickness: 1)),
                 ]),
               ),
-              Wrap(
-                children: [
-                  OuathBox(
-                    onclick: () {
-                      loginWithGoogle();
-                    },
-                    child: Image.network(
-                        'http://pngimg.com/uploads/google/google_PNG19635.png',
-                        fit: BoxFit.cover),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  OuathBox(
-                    onclick: () {
-                      loginWithFacebook();
-                      print("login with facebook");
-                    },
-                    child: Icon(
-                      Icons.facebook,
-                      size: 40,
-                    ),
-                  ),
-                ],
-              ),
+              displayOauthBoxes(),
               SizedBox(
                 height: 40,
               ),
-              RichText(
-                  text: TextSpan(children: [
-                TextSpan(
-                    text: "Dont have an account? ",
-                    style: TextStyle(color: Colors.black)),
-                TextSpan(
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        //  debugPrint("tapped");
-                        // navigate to registration page
-                        Navigator.pushNamed(context, "/signup_screen");
-                      },
-                    text: "Create an Account!",
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold)),
-              ])),
+              CustomRichText(
+                subtext1: "Don't have an account? ",
+                subtext2: "Create an account!",
+                onTap: () => Navigator.pushNamed(context, "/signup_screen"),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget displayOauthBoxes() {
+    return Wrap(
+      children: [
+        OuathBox(
+          onclick: () {
+            loginWithGoogle();
+          },
+          child: Image.network(
+              'http://pngimg.com/uploads/google/google_PNG19635.png',
+              fit: BoxFit.cover),
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        OuathBox(
+          onclick: () {
+            loginWithFacebook();
+            print("login with facebook");
+          },
+          child: Icon(
+            Icons.facebook,
+            size: 40,
+          ),
+        ),
+      ],
     );
   }
 
@@ -172,11 +157,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Method to sign in to the app manually with email and password.
   Future<void> signInManual() async {
-    AccountServices()
-        .loginToAccount(emailController.text, passwordController.text)
-        .then((value) {
-      debugPrint("logged in, move to dashboard");
-      Navigator.pushNamed(context, "/dashboard_screen");
-    });
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      AccountServices()
+          .loginToAccount(emailController.text, passwordController.text)
+          .then((value) {
+        debugPrint("logged in, move to dashboard");
+
+        Navigator.pushNamed(context, "/dashboard_screen");
+      });
+    } else {
+      debugPrint("Show error for textfields");
+      // form validations can be done
+      // for now keeping it simple
+    }
   }
 }

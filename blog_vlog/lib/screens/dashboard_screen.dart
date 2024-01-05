@@ -1,3 +1,5 @@
+// Class for dashboard screen
+
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {

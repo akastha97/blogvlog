@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+// Class for Homescreen/ Get started screen
+
+import 'package:blog_vlog/custom_components/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,20 +34,16 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Center(
                   child: Text(
                 "Welcome to BlogVlog!\nYour daily dose of content",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               )),
             ),
-            
-            Center(
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/login_screen");
-                },
-                icon: Icon(
-                  Icons.arrow_circle_right,
-                  size: 50,
-                ),
-              ),
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0),
+              child: CustomButton(
+                  buttonText: "Get Started!",
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/login_screen");
+                  }),
             ),
           ],
         ),

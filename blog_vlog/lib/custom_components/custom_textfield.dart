@@ -1,3 +1,5 @@
+// Custom class for textfields used in the app
+
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -26,6 +28,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: TextField(
+        autocorrect: false,
+        textCapitalization:TextCapitalization.none,
         controller: widget.controller,
         obscureText: widget.obscure,
         decoration: InputDecoration(

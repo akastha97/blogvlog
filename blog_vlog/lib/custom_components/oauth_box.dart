@@ -1,3 +1,5 @@
+// Custom square ouath boxes used in the app
+
 import 'package:flutter/material.dart';
 
 class OuathBox extends StatefulWidget {
