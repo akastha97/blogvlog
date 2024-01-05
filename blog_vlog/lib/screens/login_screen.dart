@@ -118,6 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   OuathBox(
                     onclick: () {
+                      loginWithFacebook();
                       print("login with facebook");
                     },
                     child: Icon(
@@ -157,6 +158,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> loginWithGoogle() async {
     AccountServices().signInWithGoogle().then((value) {
       debugPrint("logged in with google, move to dashboard");
+      Navigator.pushNamed(context, "/dashboard_screen");
+    });
+  }
+
+  // Method to sign in with google account
+  Future<void> loginWithFacebook() async {
+    AccountServices().signInWithFacebook().then((value) {
+      debugPrint("logged in with facebook, move to dashboard");
       Navigator.pushNamed(context, "/dashboard_screen");
     });
   }
