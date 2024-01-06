@@ -8,6 +8,7 @@ class CustomTextField extends StatefulWidget {
   final Widget suffix;
   final bool obscure;
   final TextEditingController controller;
+  final int? maxlines;
 
   CustomTextField({
     super.key,
@@ -16,8 +17,8 @@ class CustomTextField extends StatefulWidget {
     required this.hint,
     required this.obscure,
     required this.controller,
+    required this.maxlines
   });
-  
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -29,8 +30,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: TextField(
-       // autocorrect: false,
-        textCapitalization:TextCapitalization.none,
+        maxLines: widget.maxlines,
+        autocorrect: false,
+        textCapitalization: TextCapitalization.none,
         controller: widget.controller,
         obscureText: widget.obscure,
         decoration: InputDecoration(

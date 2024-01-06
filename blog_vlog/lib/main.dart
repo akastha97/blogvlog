@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:blog_vlog/screens/add_blogpost_screen.dart';
 import 'package:blog_vlog/screens/dashboard_screen.dart';
 import 'package:blog_vlog/screens/home_screen.dart';
 import 'package:blog_vlog/screens/login_screen.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         "/login_screen": (context) => LoginScreen(),
         "/signup_screen": (context) => SignupScreen(),
         "/dashboard_screen": (context) => DashboardScreen(),
+        "/blogpost_screen": (context) => BlogPostScreen(),
       },
       debugShowCheckedModeBanner: false,
       title: 'Blog Vlog',

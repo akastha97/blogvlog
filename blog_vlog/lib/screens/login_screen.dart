@@ -48,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 20,
                 ),
                 CustomTextField(
+                  maxlines: 1,
                   suffix: Text(""),
                   obscure: false,
                   hint: "Email",
@@ -55,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: emailController,
                 ),
                 CustomTextField(
+                   maxlines: 1,
                   suffix: GestureDetector(
                       onTap: () {
                         setState(() {

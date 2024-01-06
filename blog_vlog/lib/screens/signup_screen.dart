@@ -7,7 +7,6 @@ import '../custom_components/custom_button.dart';
 import '../custom_components/custom_richtext.dart';
 import '../custom_components/custom_textfield.dart';
 
-
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -23,7 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        //backgroundColor: Color(0xff84A98C),
+        backgroundColor: Color(0xff84A98C),
         body: SingleChildScrollView(
           child: Center(
               child: Column(
@@ -36,13 +35,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 20,
               ),
               const Text(
-                "Create Account",
+                "Create Account", 
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                 maxlines: 1,
                 suffix: Text(""),
                 obscure: false,
                 hint: "Email",
@@ -50,6 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: emailController,
               ),
               CustomTextField(
+                 maxlines: 1,
                 suffix: GestureDetector(
                     onTap: () {
                       setState(() {
@@ -82,7 +83,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   Navigator.pushNamed(context, "/login_screen");
                 },
               ),
-        
+
               const SizedBox(height: 40),
               CustomRichText(
                 subtext1: 'Already have an account?',

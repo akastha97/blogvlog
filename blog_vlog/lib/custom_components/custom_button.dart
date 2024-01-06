@@ -19,12 +19,13 @@ class _CustomButtonState extends State<CustomButton> {
       width: 140,
       child: ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
           ),
           onPressed: () => widget.onPressed?.call(),
           child: Text(
             "${widget.buttonText}",
-            style: TextStyle(color: Colors.black),
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white),
           )),
     );
   }
