@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 class ShowBlogScreen extends StatefulWidget {
-  final String title;
-  final String body;
+  dynamic argsData;
 
-  ShowBlogScreen({super.key, required this.title, required this.body});
+  ShowBlogScreen({super.key, required this.argsData});
 
   @override
   State<ShowBlogScreen> createState() => _ShowBlogScreenState();
 }
 
 class _ShowBlogScreenState extends State<ShowBlogScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.argsData = Get.arguments;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,21 +41,31 @@ class _ShowBlogScreenState extends State<ShowBlogScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset("lib/assets/photo-2.png")),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          widget.argsData[2] ?? "https://picsum.photos/200/",
+                          // fit: BoxFit.contain,
+                        )),
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
                 Text(
-                  widget.title,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  widget.argsData[0] ?? "",
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                Text(widget.body,
-                    style: TextStyle(
+                Text(widget.argsData[1] ?? "",
+                    style: const TextStyle(
                       fontSize: 16,
                     )),
                 const SizedBox(

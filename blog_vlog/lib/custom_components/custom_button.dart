@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CustomButton extends StatefulWidget {
   final String buttonText;
   Function()? onPressed;
@@ -23,7 +24,7 @@ class _CustomButtonState extends State<CustomButton> {
           ),
           onPressed: () => widget.onPressed?.call(),
           child: Text(
-            "${widget.buttonText}",
+            widget.buttonText,
             textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white),
           )),

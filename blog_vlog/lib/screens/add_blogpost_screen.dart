@@ -5,13 +5,15 @@ import 'dart:io';
 import 'package:blog_vlog/custom_components/custom_button.dart';
 import 'package:blog_vlog/custom_components/custom_textfield.dart';
 import 'package:blog_vlog/models/blogpost_model.dart';
+import 'package:blog_vlog/routes/app_routes.dart';
 import 'package:blog_vlog/services/attachment_service.dart';
 import 'package:blog_vlog/services/storage_services.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class BlogPostScreen extends StatefulWidget {
-  const BlogPostScreen({super.key});
-
+  const BlogPostScreen({super.key, this.callBack});
+  final Function(String)? callBack;
   @override
   State<BlogPostScreen> createState() => _BlogPostScreenState();
 }
@@ -21,8 +23,9 @@ class _BlogPostScreenState extends State<BlogPostScreen> {
   final _bodyController = TextEditingController();
   File? selectedImage;
   AttachmentServices attachmentServices = AttachmentServices();
-  FirebaseStorageServices storageServices = FirebaseStorageServices();
+  FirebaseStorageServices firebaseStorageServices = FirebaseStorageServices();
   BlogPostModel? postModel;
+  late final String? imageUrl;
 
   // Method to open the gallery service
   Future<void> openGallery() async {
@@ -36,8 +39,7 @@ class _BlogPostScreenState extends State<BlogPostScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-
+    firebaseStorageServices.initializeStorageRefs();
     super.initState();
   }
 
@@ -104,23 +106,45 @@ class _BlogPostScreenState extends State<BlogPostScreen> {
                 controller: _bodyController),
             CustomButton(
                 buttonText: "Publish",
-                onPressed: () {
-                  Container(
-                    height: 40,
-                    width: 40,
-                    child: CircularProgressIndicator(),
+                onPressed: () async {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Center(
+                        child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(16)),
+                            height: 64,
+                            width: 64,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: CircularProgressIndicator(
+                                color: Colors.green,
+                              ),
+                            )),
+                      );
+                    },
                   );
-                  postModel = BlogPostModel(
-                    _titleController.text,
-                    _bodyController.text,
-                  );
-                  print("After updating postModel: $postModel");
-                  storageServices.addBlogPost(postModel!);
-                  Navigator.pop(context);
+                  postModel = BlogPostModel(_titleController.text,
+                      _bodyController.text, selectedImage!.path);
+
+                  debugPrint("After updating postModel: $postModel");
+
+                  await firebaseStorageServices
+                      .uploadFile(selectedImage!.path); // image , storage
+
+                  postModel!.imagePath =
+                      await firebaseStorageServices.getDownloadUrl();
+
+                  await firebaseStorageServices
+                      .addBlogPost(postModel!); // title body
+
+                  debugPrint("Image path: ${postModel!.imagePath}");
+
+                  Get.offAndToNamed(AppRoutes.dashboardScreenRoute);
                 }),
-            SizedBox(
-              height: 50,
-            )
+            SizedBox(height: 50)
           ],
         ),
       ),

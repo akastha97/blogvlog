@@ -6,8 +6,11 @@
 import 'package:blog_vlog/custom_components/custom_richtext.dart';
 import 'package:blog_vlog/custom_components/custom_textfield.dart';
 import 'package:blog_vlog/custom_components/oauth_box.dart';
+import 'package:blog_vlog/routes/app_routes.dart';
 import 'package:blog_vlog/services/account_services.dart';
+import 'package:blog_vlog/services/login_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 import '../custom_components/custom_button.dart';
 
@@ -22,6 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isVisible = true;
+  LoginPreferences preferences = LoginPreferences();
+  bool isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: emailController,
                 ),
                 CustomTextField(
-                   maxlines: 1,
+                  maxlines: 1,
                   suffix: GestureDetector(
                       onTap: () {
                         setState(() {
@@ -143,11 +148,21 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Method to sign in with google account
+  // To save the login value to shared preferences.
+  void saveLoginValues() async {
+    setState(() {
+      isLoggedIn = true;
+      preferences.saveLoginVal(isLoggedIn);
+      preferences.getLoginValue();
+    });
+  }
+
+  // // Method to sign in with google account
   Future<void> loginWithGoogle() async {
     AccountServices().signInWithGoogle().then((value) {
       debugPrint("logged in with google, move to dashboard");
-      Navigator.pushNamed(context, "/dashboard_screen");
+      saveLoginValues();
+      Get.toNamed(AppRoutes.dashboardScreenRoute);
     });
   }
 
@@ -155,7 +170,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> loginWithFacebook() async {
     AccountServices().signInWithFacebook().then((value) {
       debugPrint("logged in with facebook, move to dashboard");
-      Navigator.pushNamed(context, "/dashboard_screen");
+      saveLoginValues();
+      Get.toNamed(AppRoutes.dashboardScreenRoute);
     });
   }
 
@@ -166,13 +182,14 @@ class _LoginScreenState extends State<LoginScreen> {
           .loginToAccount(emailController.text, passwordController.text)
           .then((value) {
         debugPrint("logged in, move to dashboard");
+        saveLoginValues();
 
-        Navigator.pushNamed(context, "/dashboard_screen");
+        Get.toNamed(AppRoutes.dashboardScreenRoute);
       });
     } else {
       debugPrint("Show error for textfields");
       // form validations can be done
-      // for now keeping it simple
+      // for now not doing any
     }
   }
 }

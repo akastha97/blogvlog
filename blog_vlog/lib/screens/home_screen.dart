@@ -3,7 +3,9 @@
 // Class for Homescreen/ Get started screen
 
 import 'package:blog_vlog/custom_components/custom_button.dart';
+import 'package:blog_vlog/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: CustomButton(
                   buttonText: "Get Started!",
                   onPressed: () {
-                    Navigator.pushNamed(context, "/login_screen");
+                    Get.toNamed(AppRoutes.loginScreenRoute);
                   }),
             ),
           ],
