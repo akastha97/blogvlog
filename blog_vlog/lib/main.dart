@@ -2,7 +2,7 @@
 
 import 'package:blog_vlog/routes/app_routes.dart';
 import 'package:blog_vlog/routes/app_screens.dart';
-import 'package:blog_vlog/services/login_preferences.dart';
+import 'package:blog_vlog/util/login_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -8,7 +8,7 @@ import 'package:blog_vlog/custom_components/custom_textfield.dart';
 import 'package:blog_vlog/custom_components/oauth_box.dart';
 import 'package:blog_vlog/routes/app_routes.dart';
 import 'package:blog_vlog/services/account_services.dart';
-import 'package:blog_vlog/services/login_preferences.dart';
+import 'package:blog_vlog/util/login_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
