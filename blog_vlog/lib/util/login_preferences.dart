@@ -14,7 +14,7 @@ class LoginPreferences {
   Future<void> initializePreferences() async {
     preferences = await SharedPreferences.getInstance();
   }
-  
+
   // To save the login value to shared preferences.
   void saveLoginVal(bool loggedIn) async {
     await initializePreferences();

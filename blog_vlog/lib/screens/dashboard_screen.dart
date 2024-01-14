@@ -1,6 +1,8 @@
 // Class for dashboard screen
 
+import 'package:blog_vlog/services/account_services.dart';
 import 'package:blog_vlog/services/storage_services.dart';
+import 'package:blog_vlog/util/login_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -16,7 +18,9 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final FirebaseStorageServices _storageServices = FirebaseStorageServices();
+  final FirebaseStorageServices storageServices = FirebaseStorageServices();
+  final AccountServices accountServices = AccountServices();
+  final LoginPreferences preferences = LoginPreferences();
 
   @override
   void initState() {
@@ -26,11 +30,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final blogPostsStream = _storageServices.getBlogPostsStream();
+    final blogPostsStream = storageServices.getBlogPostsStream();
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xff84A98C),
+        appBar: AppBar(
+          actions: [
+            IconButton(
+                onPressed: () {
+                  accountServices.logoutAccount();
+                  Get.offAndToNamed(AppRoutes.loginScreenRoute);
+                  preferences.saveLoginVal(false);
+                  preferences.getLoginValue();
+                },
+                icon: Icon(Icons.logout_outlined))
+          ],
+          automaticallyImplyLeading: false,
+          toolbarHeight: 80,
+          backgroundColor: Color(0xff84A98C),
+          elevation: 10,
+          title: Image.asset(
+            "lib/assets/logo-2.png",
+            fit: BoxFit.fill,
+            height: 50,
+            width: 160,
+          ),
+          centerTitle: true,
+        ),
+        // backgroundColor: Color(0xff84A98C),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.black,
           child: const Icon(
@@ -44,14 +71,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         body: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 40,
+                height: 20,
               ),
-              const Text(
-                "Dashboard",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              const Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Text(
+                  "Dashboard",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(
+                height: 16,
               ),
               displayBlogsListView(blogPostsStream),
             ],
@@ -86,20 +119,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           blogPostData['imageUrl']
                         ]);
                       },
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 20),
-                        child: ListTile(
-                            leading: CircleAvatar(
-                                backgroundColor: Colors.green[100],
-                                backgroundImage: NetworkImage(
-                                  blogPostData['imageUrl'] ??
-                                      "https://picsum.photos/200/300",
-                                )),
-                            title: Text(blogPostData['title'] ?? 'No Title'),
-                            subtitle: Flexible(
-                                child:
-                                    Text(blogPostData['body'] ?? 'No body'))),
+                      child: Container(
+                        color: Colors.green[100],
+                        child: Card(
+                          margin: const EdgeInsets.only(
+                              left: 10, right: 10, bottom: 5, top: 10),
+                          child: ListTile(
+                              leading: CircleAvatar(
+                                  backgroundColor: Colors.green[100],
+                                  backgroundImage: NetworkImage(
+                                    blogPostData['imageUrl'] ??
+                                        "https://picsum.photos/200/300",
+                                  )),
+                              title: Text(blogPostData['title'] ?? 'No Title'),
+                              subtitle: Text(
+                                blogPostData['body'] ?? 'No body',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                softWrap: false,
+                              )),
+                        ),
                       ),
                     );
                   }),
@@ -107,7 +146,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           } else if (snapshot.hasError) {
             return Text("Error: ${snapshot.error}");
           } else {
-            return Text(
+            return const Text(
               "No data..!",
               style: TextStyle(color: Colors.white),
             );

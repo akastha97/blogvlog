@@ -50,19 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
     services.navigateToScreen();
   }
 
-  // // To check if the user has logged in or not and navigate accordingly.
-  // void navigateToScreen() async {
-  //   bool? logged = await services.getLoginValue();
-
-  //   if (logged!) {
-  //     // If logged in, navigate to the dashboard screen.
-  //     Get.offNamed(AppRoutes.dashboardScreenRoute);
-  //   } else {
-  //     // If not logged in, navigate to the login screen.
-  //     Get.offNamed(AppRoutes.loginScreenRoute);
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Container();

@@ -1,7 +1,10 @@
 // Class for Signup screen
 
+import 'package:blog_vlog/routes/app_routes.dart';
+import 'package:blog_vlog/util/consts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../custom_components/custom_button.dart';
 import '../custom_components/custom_richtext.dart';
@@ -35,14 +38,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 20,
               ),
               const Text(
-                "Create Account", 
+                "Create Account",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
                 height: 20,
               ),
               CustomTextField(
-                 maxlines: 1,
+                maxlines: 1,
                 suffix: Text(""),
                 obscure: false,
                 hint: "Email",
@@ -50,7 +53,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: emailController,
               ),
               CustomTextField(
-                 maxlines: 1,
+                maxlines: 1,
                 suffix: GestureDetector(
                     onTap: () {
                       setState(() {
@@ -78,17 +81,17 @@ class _SignupScreenState extends State<SignupScreen> {
               CustomButton(
                 buttonText: 'Create Account',
                 onPressed: () {
+                  AppConstants().displayLoading(context);
                   createAccount();
-                  debugPrint("account created successfully");
-                  Navigator.pushNamed(context, "/login_screen");
+                  // To pop the dialog
+                  Get.back();
                 },
               ),
-
               const SizedBox(height: 40),
               CustomRichText(
                 subtext1: 'Already have an account?',
                 subtext2: ' Login here!',
-                onTap: () => Navigator.pushNamed(context, "/login_screen"),
+                onTap: () => Get.toNamed(AppRoutes.loginScreenRoute),
               ),
             ],
           )),
@@ -103,9 +106,16 @@ class _SignupScreenState extends State<SignupScreen> {
         email: emailController.text,
         password: passwordController.text,
       );
+      debugPrint("Account created successfully");
+      AppConstants().displaySnackBar("Account created succesfully");
+      Get.toNamed(AppRoutes.loginScreenRoute);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');
+        AppConstants()
+            .displaySnackBar("The account already exists for that email");
+
+        Get.back();
       }
     } catch (e) {
       print(e);

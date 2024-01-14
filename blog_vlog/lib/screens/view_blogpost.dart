@@ -42,6 +42,7 @@ class _ShowBlogScreenState extends State<ShowBlogScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
+                  height: 280,
                   width: MediaQuery.of(context).size.width,
                   child: FittedBox(
                     fit: BoxFit.fill,
@@ -49,7 +50,6 @@ class _ShowBlogScreenState extends State<ShowBlogScreen> {
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
                           widget.argsData[2] ?? "https://picsum.photos/200/",
-                          // fit: BoxFit.contain,
                         )),
                   ),
                 ),

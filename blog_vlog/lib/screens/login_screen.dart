@@ -8,6 +8,7 @@ import 'package:blog_vlog/custom_components/custom_textfield.dart';
 import 'package:blog_vlog/custom_components/oauth_box.dart';
 import 'package:blog_vlog/routes/app_routes.dart';
 import 'package:blog_vlog/services/account_services.dart';
+import 'package:blog_vlog/util/consts.dart';
 import 'package:blog_vlog/util/login_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -110,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 CustomRichText(
                   subtext1: "Don't have an account? ",
                   subtext2: "Create an account!",
-                  onTap: () => Navigator.pushNamed(context, "/signup_screen"),
+                  onTap: () => Get.toNamed(AppRoutes.signupScreenRoute),
                 ),
               ],
             ),
@@ -120,6 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // To display the Oauth boxes UI in a row.
   Widget displayOauthBoxes() {
     return Wrap(
       children: [
@@ -162,7 +164,9 @@ class _LoginScreenState extends State<LoginScreen> {
     AccountServices().signInWithGoogle().then((value) {
       debugPrint("logged in with google, move to dashboard");
       saveLoginValues();
+      AppConstants().displayLoading(context);
       Get.toNamed(AppRoutes.dashboardScreenRoute);
+      Get.back();
     });
   }
 
@@ -171,7 +175,9 @@ class _LoginScreenState extends State<LoginScreen> {
     AccountServices().signInWithFacebook().then((value) {
       debugPrint("logged in with facebook, move to dashboard");
       saveLoginValues();
+      AppConstants().displayLoading(context);
       Get.toNamed(AppRoutes.dashboardScreenRoute);
+      Get.back();
     });
   }
 
@@ -180,11 +186,12 @@ class _LoginScreenState extends State<LoginScreen> {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       AccountServices()
           .loginToAccount(emailController.text, passwordController.text)
-          .then((value) {
+          .then((value) async {
         debugPrint("logged in, move to dashboard");
         saveLoginValues();
-
-        Get.toNamed(AppRoutes.dashboardScreenRoute);
+        AppConstants().displayLoading(context);
+        await Get.toNamed(AppRoutes.dashboardScreenRoute);
+        Get.back();
       });
     } else {
       debugPrint("Show error for textfields");

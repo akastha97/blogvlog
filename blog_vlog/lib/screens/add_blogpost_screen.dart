@@ -8,6 +8,7 @@ import 'package:blog_vlog/models/blogpost_model.dart';
 import 'package:blog_vlog/routes/app_routes.dart';
 import 'package:blog_vlog/services/attachment_service.dart';
 import 'package:blog_vlog/services/storage_services.dart';
+import 'package:blog_vlog/util/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -107,42 +108,36 @@ class _BlogPostScreenState extends State<BlogPostScreen> {
             CustomButton(
                 buttonText: "Publish",
                 onPressed: () async {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Center(
-                        child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(16)),
-                            height: 64,
-                            width: 64,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: CircularProgressIndicator(
-                                color: Colors.green,
-                              ),
-                            )),
-                      );
-                    },
-                  );
-                  postModel = BlogPostModel(_titleController.text,
-                      _bodyController.text, selectedImage!.path);
+                  AppConstants().displayLoading(context);
 
-                  debugPrint("After updating postModel: $postModel");
+                  try {
+                    await firebaseStorageServices
+                        .uploadFile(selectedImage?.path ?? '');
 
-                  await firebaseStorageServices
-                      .uploadFile(selectedImage!.path); // image , storage
+                    postModel = BlogPostModel(_titleController.text,
+                        _bodyController.text, selectedImage?.path ?? '');
 
-                  postModel!.imagePath =
-                      await firebaseStorageServices.getDownloadUrl();
+                    debugPrint("After updating postModel: $postModel");
 
-                  await firebaseStorageServices
-                      .addBlogPost(postModel!); // title body
+                    await Future.delayed(Duration(seconds: 2));
+                    print(
+                        "Firebase Storage reference: ${firebaseStorageServices}");
 
-                  debugPrint("Image path: ${postModel!.imagePath}");
+                    postModel!.imagePath =
+                        await firebaseStorageServices.getDownloadUrl();
 
-                  Get.offAndToNamed(AppRoutes.dashboardScreenRoute);
+                    await firebaseStorageServices
+                        .addBlogPost(postModel!); // title body
+
+                    AppConstants().displaySnackBar("Post added successfully");
+
+                    debugPrint("Image path: ${postModel!.imagePath}");
+
+                    Get.offAndToNamed(AppRoutes.dashboardScreenRoute);
+                  } catch (error) {
+                    print("Error retrieving download URL: $error");
+                    print("Error handling post creation: $error");
+                  }
                 }),
             SizedBox(height: 50)
           ],

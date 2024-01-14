@@ -23,12 +23,25 @@ class FirebaseStorageServices {
 
   // To add and save the new blog post to Firebase
   Future<DocumentReference> addBlogPost(BlogPostModel model) async {
-    return blogPosts.add({
+    Map<String, dynamic> data = {
       'title': model.title,
       'body': model.body,
-      'imageUrl': model.imagePath
-    });
+    };
+
+    if (model.imagePath != null && model.imagePath!.isNotEmpty) {
+      data['imageUrl'] = model.imagePath;
+    }
+
+    return blogPosts.add(data);
   }
+
+  // Future<DocumentReference> addBlogPost(BlogPostModel model) async {
+  //   return blogPosts.add({
+  //     'title': model.title,
+  //     'body': model.body,
+  //     'imageUrl': model.imagePath
+  //   });
+  // }
 
   // To get and read the existing blog posts from Firebase
   Stream<QuerySnapshot> getBlogPostsStream() {
@@ -40,8 +53,11 @@ class FirebaseStorageServices {
   // Call this when posting a blog
   Future<void> uploadFile(String? path) async {
     try {
-      await uploadImageRef.putFile(File(path!));
-      //print(url.toString());
+      if (path != null && File(path).existsSync()) {
+        await uploadImageRef.putFile(File(path!));
+      } else {
+        print("File does not exist. Skipping upload.");
+      }
     } catch (error) {
       debugPrint("Error with uploading: $error");
     }
