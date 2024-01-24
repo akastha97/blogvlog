@@ -7,12 +7,13 @@ import 'package:blog_vlog/custom_components/custom_richtext.dart';
 import 'package:blog_vlog/custom_components/custom_textfield.dart';
 import 'package:blog_vlog/custom_components/oauth_box.dart';
 import 'package:blog_vlog/routes/app_routes.dart';
-import 'package:blog_vlog/services/account_services.dart';
 import 'package:blog_vlog/util/consts.dart';
 import 'package:blog_vlog/util/login_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/route_manager.dart';
 
+import '../bloc/auth_bloc.dart';
 import '../custom_components/custom_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,174 +30,173 @@ class _LoginScreenState extends State<LoginScreen> {
   LoginPreferences preferences = LoginPreferences();
   bool isLoggedIn = false;
 
+  void signInManual() {
+    context
+        .read<AuthBlocBloc>()
+        .add(ManualLoginEvent(emailController.text, passwordController.text));
+  }
+
+  void loginWithGoogle() {
+    context.read<AuthBlocBloc>().add(GoogleLoginEvent());
+  }
+
+  void loginWithFacebook() {
+    context.read<AuthBlocBloc>().add(FacebookLoginEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
+    // To display the Oauth boxes UI in a row.
+    Widget displayOauthBoxes() {
+      return Wrap(
+        children: [
+          OuathBox(
+            onclick: () {
+              loginWithGoogle();
+            },
+            child: Image.network(
+                'http://pngimg.com/uploads/google/google_PNG19635.png',
+                fit: BoxFit.cover),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          OuathBox(
+            onclick: () {
+              loginWithFacebook();
+              print("login with facebook");
+            },
+            child: Icon(
+              Icons.facebook,
+              size: 40,
+            ),
+          ),
+        ],
+      );
+    }
+
+    // To build the login form
+    Widget buildLoginForm() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 40,
+          ),
+          Image.asset("lib/assets/logo-2.png"),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            "Login",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          CustomTextField(
+            maxlines: 1,
+            suffix: Text(""),
+            obscure: false,
+            hint: "Email",
+            label: "Email",
+            controller: emailController,
+          ),
+          CustomTextField(
+            maxlines: 1,
+            suffix: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isVisible = !isVisible;
+                  });
+                },
+                child: isVisible
+                    ? Icon(
+                        Icons.visibility,
+                        color: Colors.black,
+                      )
+                    : Icon(
+                        Icons.visibility_off_outlined,
+                        color: Colors.black,
+                      )),
+            obscure: isVisible,
+            hint: "Password",
+            label: "Password",
+            controller: passwordController,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          CustomButton(
+            buttonText: 'Login',
+            onPressed: signInManual,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0, right: 20),
+            child: Row(children: const [
+              Expanded(
+                  child: Divider(
+                thickness: 1,
+              )),
+              Text("or"),
+              Expanded(child: Divider(thickness: 1)),
+            ]),
+          ),
+          displayOauthBoxes(),
+          SizedBox(
+            height: 40,
+          ),
+          CustomRichText(
+            subtext1: "Don't have an account? ",
+            subtext2: "Create an account!",
+            onTap: () => Get.toNamed(AppRoutes.signupScreenRoute),
+          ),
+        ],
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xff84A98C),
         body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 40,
-                ),
-                Image.asset("lib/assets/logo-2.png"),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "Login",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                CustomTextField(
-                  maxlines: 1,
-                  suffix: Text(""),
-                  obscure: false,
-                  hint: "Email",
-                  label: "Email",
-                  controller: emailController,
-                ),
-                CustomTextField(
-                  maxlines: 1,
-                  suffix: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isVisible = !isVisible;
-                        });
-                      },
-                      child: isVisible
-                          ? Icon(
-                              Icons.visibility,
-                              color: Colors.black,
-                            )
-                          : Icon(
-                              Icons.visibility_off_outlined,
-                              color: Colors.black,
-                            )),
-                  obscure: isVisible,
-                  hint: "Password",
-                  label: "Password",
-                  controller: passwordController,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                CustomButton(
-                  buttonText: 'Login',
-                  onPressed: signInManual,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0, right: 20),
-                  child: Row(children: const [
-                    Expanded(
-                        child: Divider(
-                      thickness: 1,
-                    )),
-                    Text("or"),
-                    Expanded(child: Divider(thickness: 1)),
-                  ]),
-                ),
-                displayOauthBoxes(),
-                SizedBox(
-                  height: 40,
-                ),
-                CustomRichText(
-                  subtext1: "Don't have an account? ",
-                  subtext2: "Create an account!",
-                  onTap: () => Get.toNamed(AppRoutes.signupScreenRoute),
-                ),
-              ],
-            ),
+            child: Center(
+          child: BlocConsumer<AuthBlocBloc, AuthBlocState>(
+            listener: (context, state) {
+              if (state is AuthLoggedInSuccessState) {
+                Future.delayed(Duration(milliseconds: 100), () async {
+                  setState(() {
+                    isLoggedIn = true;
+                    preferences.saveLoginVal(isLoggedIn);
+                    preferences.getLoginValue();
+                  });
+                  await Get.toNamed(AppRoutes.dashboardScreenRoute);
+                });
+              } else if (state is AuthErrorState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.errorMessage)),
+                );
+              }
+            },
+            builder: (context, state) {
+              if (state is AuthLoadingState) {
+                return AppConstants().displayLoading(context);
+              } else {
+                return buildLoginForm();
+              }
+            },
           ),
-        ),
+        )),
       ),
     );
   }
 
-  // To display the Oauth boxes UI in a row.
-  Widget displayOauthBoxes() {
-    return Wrap(
-      children: [
-        OuathBox(
-          onclick: () {
-            loginWithGoogle();
-          },
-          child: Image.network(
-              'http://pngimg.com/uploads/google/google_PNG19635.png',
-              fit: BoxFit.cover),
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        OuathBox(
-          onclick: () {
-            loginWithFacebook();
-            print("login with facebook");
-          },
-          child: Icon(
-            Icons.facebook,
-            size: 40,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // To save the login value to shared preferences.
-  void saveLoginValues() async {
-    setState(() {
-      isLoggedIn = true;
-      preferences.saveLoginVal(isLoggedIn);
-      preferences.getLoginValue();
-    });
-  }
-
-  // // Method to sign in with google account
-  Future<void> loginWithGoogle() async {
-    AccountServices().signInWithGoogle().then((value) {
-      debugPrint("logged in with google, move to dashboard");
-      saveLoginValues();
-      AppConstants().displayLoading(context);
-      Get.toNamed(AppRoutes.dashboardScreenRoute);
-      Get.back();
-    });
-  }
-
-  // Method to sign in with google account
-  Future<void> loginWithFacebook() async {
-    AccountServices().signInWithFacebook().then((value) {
-      debugPrint("logged in with facebook, move to dashboard");
-      saveLoginValues();
-      AppConstants().displayLoading(context);
-      Get.toNamed(AppRoutes.dashboardScreenRoute);
-      Get.back();
-    });
-  }
-
-  // Method to sign in to the app manually with email and password.
-  Future<void> signInManual() async {
-    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      AccountServices()
-          .loginToAccount(emailController.text, passwordController.text)
-          .then((value) async {
-        debugPrint("logged in, move to dashboard");
-        saveLoginValues();
-        AppConstants().displayLoading(context);
-        await Get.toNamed(AppRoutes.dashboardScreenRoute);
-        Get.back();
-      });
-    } else {
-      debugPrint("Show error for textfields");
-      // form validations can be done
-      // for now not doing any
-    }
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }

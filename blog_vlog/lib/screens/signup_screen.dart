@@ -99,7 +99,9 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
+ 
 
+ // This has to move to bloc as well, but keeping it here as of now.
   Future<void> createAccount() async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -114,7 +116,6 @@ class _SignupScreenState extends State<SignupScreen> {
         print('The account already exists for that email.');
         AppConstants()
             .displaySnackBar("The account already exists for that email");
-
         Get.back();
       }
     } catch (e) {

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 class AppConstants {
   // Method to display the loading indicator alert dialog
-  void displayLoading(BuildContext context) {
+  displayLoading(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -23,7 +23,7 @@ class AppConstants {
           );
         });
   }
-  
+
   // To display the Get Snackbar
   SnackbarController displaySnackBar(String bodyText) {
     return Get.snackbar(

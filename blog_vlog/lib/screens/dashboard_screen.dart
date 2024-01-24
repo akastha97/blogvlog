@@ -1,7 +1,7 @@
 // Class for dashboard screen
 
-import 'package:blog_vlog/services/account_services.dart';
 import 'package:blog_vlog/services/storage_services.dart';
+import 'package:blog_vlog/util/consts.dart';
 import 'package:blog_vlog/util/login_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final FirebaseStorageServices storageServices = FirebaseStorageServices();
-  final AccountServices accountServices = AccountServices();
+  // final AccountServices accountServices = AccountServices();
   final LoginPreferences preferences = LoginPreferences();
 
   @override
@@ -38,10 +38,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           actions: [
             IconButton(
                 onPressed: () {
-                  accountServices.logoutAccount();
+                  AppConstants().displayLoading(context);
                   Get.offAndToNamed(AppRoutes.loginScreenRoute);
                   preferences.saveLoginVal(false);
-                  preferences.getLoginValue();
                 },
                 icon: Icon(Icons.logout_outlined))
           ],

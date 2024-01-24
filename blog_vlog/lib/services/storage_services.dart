@@ -35,14 +35,6 @@ class FirebaseStorageServices {
     return blogPosts.add(data);
   }
 
-  // Future<DocumentReference> addBlogPost(BlogPostModel model) async {
-  //   return blogPosts.add({
-  //     'title': model.title,
-  //     'body': model.body,
-  //     'imageUrl': model.imagePath
-  //   });
-  // }
-
   // To get and read the existing blog posts from Firebase
   Stream<QuerySnapshot> getBlogPostsStream() {
     final blogPostsStream = blogPosts.snapshots();

@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:blog_vlog/bloc/auth_bloc.dart';
 import 'package:blog_vlog/routes/app_routes.dart';
 import 'package:blog_vlog/routes/app_screens.dart';
 import 'package:blog_vlog/util/login_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 import 'firebase_options.dart';
@@ -24,12 +27,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      initialRoute: AppRoutes.homeScreenRoute,
-      getPages: AppScreens().screens,
-      debugShowCheckedModeBanner: false,
-      title: 'Blog Vlog',
-      home: MyHomePage(),
+    return BlocProvider(
+      create: (context) => AuthBlocBloc(FirebaseAuth.instance,),
+      child: GetMaterialApp(
+        initialRoute: AppRoutes.loginScreenRoute,
+        getPages: AppScreens().screens,
+        debugShowCheckedModeBanner: false,
+        title: 'Blog Vlog',
+        home: MyHomePage(),
+      ),
     );
   }
 }
