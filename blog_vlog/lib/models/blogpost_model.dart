@@ -1,9 +1,8 @@
+// Model class for a blog post
+
 class BlogPostModel {
   final String title;
   final String body;
-  final String image;
-
-  BlogPostModel(this.title, this.body, this.image);
-
-  
+  String? imagePath; 
+  BlogPostModel(this.title, this.body, [this.imagePath]);
 }

@@ -1,16 +1,20 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:blog_vlog/screens/dashboard_screen.dart';
-import 'package:blog_vlog/screens/home_screen.dart';
-import 'package:blog_vlog/screens/login_screen.dart';
-import 'package:blog_vlog/screens/signup_screen.dart';
+import 'package:blog_vlog/bloc/auth_bloc.dart';
+import 'package:blog_vlog/routes/app_routes.dart';
+import 'package:blog_vlog/routes/app_screens.dart';
+import 'package:blog_vlog/util/login_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -23,16 +27,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        "/home_screen": (context) => HomeScreen(),
-        "/login_screen": (context) => LoginScreen(),
-        "/signup_screen": (context) => SignupScreen(),
-        "/dashboard_screen": (context) => DashboardScreen(),
-      },
-      debugShowCheckedModeBanner: false,
-      title: 'Blog Vlog',
-      home: MyHomePage(),
+    return BlocProvider(
+      create: (context) => AuthBlocBloc(FirebaseAuth.instance,),
+      child: GetMaterialApp(
+        initialRoute: AppRoutes.loginScreenRoute,
+        getPages: AppScreens().screens,
+        debugShowCheckedModeBanner: false,
+        title: 'Blog Vlog',
+        home: MyHomePage(),
+      ),
     );
   }
 }
@@ -45,8 +48,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  LoginPreferences services = LoginPreferences();
+
+  @override
+  void initState() {
+    super.initState();
+    services.navigateToScreen();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return HomeScreen();
+    return Container();
   }
 }
